@@ -336,6 +336,8 @@ fn build() -> io::Result<()> {
     // other external libraries
     enable!(configure, "BUILD_LIB_DRM", "libdrm");
     enable!(configure, "BUILD_NVENC", "nvenc");
+    enable!(configure, "BUILD_VAAPI", "vaapi");
+    enable!(configure, "BUILD_AMF", "amf");
 
     // configure external protocols
     enable!(configure, "BUILD_LIB_SMBCLIENT", "libsmbclient");
@@ -1275,6 +1277,10 @@ fn main() {
 
     if env::var("CARGO_FEATURE_SWSCALE").is_ok() {
         builder = builder.header(search_include(&include_paths, "libswscale/swscale.h"));
+    }
+
+    if env::var("CARGO_FEATURE_BUILD_VAAPI").is_ok() {
+        builder = builder.header(search_include(&include_paths, "libavutil/hwcontext_vaapi.h"));
     }
 
     if let Some(hwcontext_drm_header) =
